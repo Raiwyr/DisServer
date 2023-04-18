@@ -313,6 +313,14 @@ namespace DatabaseController
                 entity.Property(e => e.UserId)
                     .HasColumnName(nameof(Review.UserId))
                     .IsRequired();
+
+                entity.Property(e => e.UserName)
+                    .HasColumnName(nameof(Review.UserName))
+                    .IsRequired();
+
+                entity.Property(e => e.DateReview)
+                    .HasColumnName(nameof(Review.DateReview))
+                    .IsRequired();
             });
         }
     }

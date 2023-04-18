@@ -238,12 +238,26 @@ namespace FillingDatabase
                         if (random.NextDouble() >= 0.5)
                         {
 
-                            reviews.Add(new Review() { Message = "Хорошо", Assessment = random.Next(1, 6), UserId = random.Next(1, 11) });
+                            reviews.Add(new Review()
+                            {
+                                Message = "Хорошо",
+                                Assessment = random.Next(1, 6),
+                                UserId = random.Next(1, 11),
+                                UserName = "Anonim",
+                                DateReview = DateTime.Now
+                            });
                         }
                         else
                         {
-                            reviews.Add(new Review() { Message = "Плохо", Assessment = random.Next(1, 6), UserId = random.Next(1, 11) });
-                        }
+                            reviews.Add(new Review()
+                            {
+                                Message = "Плохо",
+                                Assessment = random.Next(1, 6),
+                                UserId = random.Next(1, 11),
+                                UserName = "Anonim",
+                                DateReview = DateTime.Now
+                            });
+                         }
                     }
 
                     data.Products.Add(new Product()

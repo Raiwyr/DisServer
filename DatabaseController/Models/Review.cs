@@ -17,6 +17,10 @@ namespace DatabaseController.Models
 
         public int UserId { get; set; }
 
+        public string UserName { get; set; }
+
+        public DateTime DateReview { get; set; }
+
         [JsonIgnore]
         public int ProductId { get; set; }
 
