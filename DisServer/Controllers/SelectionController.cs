@@ -20,8 +20,8 @@ namespace DisServer.Controllers
         }
 
         // GET api/<SelectionController>/5
-        [HttpGet]
-        public async Task<object> Get([FromHeader] string model)
+        [HttpPost]
+        public async Task<object> Get([FromBody] string model)
         {
             try
             {
@@ -29,8 +29,15 @@ namespace DisServer.Controllers
 
                 List<Product> seletedProducts = await connector.SelectionProductAsync(selectionModel);
 
-                string response = JsonConvert.SerializeObject(seletedProducts);
+                List<ProductHeaderModel> headers = seletedProducts.Select(p => new ProductHeaderModel()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Availability.Price,
+                    Assessment = p.Review.Count() > 0 ? p.Review.Sum(p => p.Assessment) / p.Review.Count() : 0
+                }).ToList();
 
+                string response = JsonConvert.SerializeObject(headers);
                 return response;
             }
             catch (Exception ex)

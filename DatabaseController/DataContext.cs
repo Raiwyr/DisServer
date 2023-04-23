@@ -124,6 +124,10 @@ namespace DatabaseController
                     .HasColumnName(nameof(Product.Dosage))
                     .IsRequired();
 
+                entity.Property(e => e.QuantityPackage)
+                    .HasColumnName(nameof(Product.QuantityPackage))
+                    .IsRequired();
+
                 entity.Property(e => e.ExpirationDate)
                     .HasColumnName(nameof(Product.ExpirationDate))
                     .IsRequired();
