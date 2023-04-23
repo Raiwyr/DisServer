@@ -260,11 +260,14 @@ namespace FillingDatabase
                          }
                     }
 
+                    double verQuantityPackage = random.NextDouble();
+
                     data.Products.Add(new Product()
                     {
                         Name = $"Товар {i}",
                         Composition = "Состав",
                         Dosage = "Доза",
+                        QuantityPackage = verQuantityPackage <= 0.3 ? 5 : (verQuantityPackage <= 0.6 ? 10 : 15),
                         ExpirationDate = DateTime.Now,
                         ProductType = productTypes[random.Next(productTypes.Count)],
                         ReleaseForm = releaseForms[random.Next(releaseForms.Count)],

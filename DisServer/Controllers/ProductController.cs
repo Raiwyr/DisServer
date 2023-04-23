@@ -1,6 +1,8 @@
 ﻿using DatabaseController.Models;
 using DisServer.Connectors;
+using DisServer.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -16,21 +18,6 @@ namespace DisServer.Controllers
         public ProductController()
         {
             connector = new();
-        }
-
-        // GET: api/<ProductController>
-        [HttpGet]
-        public async Task<object> GetAsync()
-        {
-            try
-            {
-                List<Product> products = await connector.GetProductsAsync();
-                return JsonConvert.SerializeObject(products);
-            }
-            catch
-            {
-                return new ForbidResult();
-            }
         }
 
         // GET api/<ProductController>/5
@@ -49,13 +36,28 @@ namespace DisServer.Controllers
             }
         }
 
-        [HttpGet("category/{id}")]
-        public async Task<object> GetByCategoryIdAsync(int id)
+        [HttpPost("category")]
+        public async Task<object> GetByCategoryIdAsync(
+            int id,
+            [FromBody] string filter)
         {
             try
             {
-                List<Product> products = await connector.GetProductsByCategoryIdAsync(id);
-                string response = JsonConvert.SerializeObject(products);
+                FilterModel? filterModel;
+                try { filterModel = JsonConvert.DeserializeObject<FilterModel>(filter); }
+                catch { filterModel = null; }
+
+                List<Product> products = filterModel == null ? await connector.GetProductsByCategoryIdAsync(id) : await connector.GetProductsByCategoryIdAsync(id, filterModel);
+
+                List<ProductHeaderModel> headers = products.Select(p => new ProductHeaderModel()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Availability.Price,
+                    Assessment = p.Review.Count() > 0 ? p.Review.Sum(p => p.Assessment) / p.Review.Count() : 0
+                }).ToList();
+
+                string response = JsonConvert.SerializeObject(headers);
                 return response;
             }
             catch (Exception ex)
@@ -64,13 +66,28 @@ namespace DisServer.Controllers
             }
         }
 
-        [HttpGet("search")]
-        public async Task<object> SearchAsync(string param)
+        [HttpPost("search")]
+        public async Task<object> SearchAsync(
+            string param,
+            [FromBody] string filter)
         {
             try
             {
-                List<Product> product = await connector.SearchProductsAsync(param);
-                string response = JsonConvert.SerializeObject(product);
+                FilterModel? filterModel;
+                try { filterModel = JsonConvert.DeserializeObject<FilterModel>(filter); }
+                catch { filterModel = null; }
+
+                List<Product> products = filterModel == null ? await connector.SearchProductsAsync(param) : await connector.SearchProductsAsync(param, filterModel);
+
+                List<ProductHeaderModel> headers = products.Select(p => new ProductHeaderModel()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Availability.Price,
+                    Assessment = p.Review.Count() > 0 ? p.Review.Sum(p => p.Assessment) / p.Review.Count() : 0
+                }).ToList();
+
+                string response = JsonConvert.SerializeObject(headers);
                 return response;
             }
             catch (Exception ex)
@@ -80,22 +97,26 @@ namespace DisServer.Controllers
             }
         }
 
-                // POST api/<ProductController>
-                [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("filter")]
+        public async Task<object> GetFiltersAsync([FromBody] string ids)
         {
-        }
+            try
+            {
+                List<int>? listIds = JsonConvert.DeserializeObject<List<int>>(ids);
 
-        // PUT api/<ProductController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+                if (listIds == null)
+                    throw new Exception();
 
-        // DELETE api/<ProductController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+                var filterParameters = await connector.GetFiltersAsync(listIds);
+
+                string response = JsonConvert.SerializeObject(filterParameters);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+
+            }
         }
     }
 }

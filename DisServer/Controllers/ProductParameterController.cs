@@ -62,24 +62,5 @@ namespace DisServer.Controllers
                 return new ForbidResult();
             }
         }
-
-
-        // POST api/<ProductParameterController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ProductParameterController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ProductParameterController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

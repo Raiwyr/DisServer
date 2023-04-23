@@ -13,6 +13,8 @@ namespace DatabaseController.Models
 
         public string Dosage { get; set; }
 
+        public int QuantityPackage { get; set; }
+
         public DateTime ExpirationDate { get; set; }
 
         public Availability Availability { get; set; }
