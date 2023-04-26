@@ -157,5 +157,33 @@ namespace DisServer.Connectors
                 throw;
             }
         }
+
+        public async Task PostReview(ReviewModel review) {
+            try
+            {
+                using DataContext context = new();
+                var user = await context.Users.Where(u => u.Id == review.UserId).FirstOrDefaultAsync();
+                var product = await context.Products.Include(p => p.Review).Where(p => p.Id == review.ProductId).FirstOrDefaultAsync();
+
+                if (user == null || product == null)
+                    throw new Exception();
+
+                product.Review.Add(new() {
+                    UserId = review.UserId,
+                    Assessment = review.Assessment,
+                    Message = review.Message,
+                    DateReview = review.DateReview,
+                    UserName = review.UserName
+                });
+
+                context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
     }
 }

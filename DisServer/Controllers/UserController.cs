@@ -187,5 +187,27 @@ namespace DisServer.Controllers
                 return new ForbidResult();
             }
         }
+
+        [HttpPost("review")]
+        public async Task<object> PostReview(
+            [FromBody] string review
+            )
+        {
+            try
+            {
+                var reviewModel = JsonConvert.DeserializeObject<ReviewModel>(review);
+                if (reviewModel == null)
+                    throw new Exception();
+
+                connector.PostReview(reviewModel);
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+            }
+        }
     }
 }
