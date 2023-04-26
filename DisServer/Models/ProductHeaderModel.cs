@@ -16,5 +16,8 @@ namespace DisServer.Models
 
         [JsonProperty("Assessment")]
         public int Assessment { get; set; }
+
+        [JsonProperty("Count")]
+        public int Count { get; set; }
     }
 }

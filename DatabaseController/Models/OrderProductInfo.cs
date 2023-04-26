@@ -11,5 +11,7 @@
 
 
         public int ProductQuantity { get; set; }
+
+        public int Price { get; set; }
     }
 }

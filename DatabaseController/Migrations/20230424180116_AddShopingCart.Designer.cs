@@ -3,6 +3,7 @@ using System;
 using DatabaseController;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseController.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230424180116_AddShopingCart")]
+    partial class AddShopingCart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
@@ -133,10 +136,6 @@ namespace DatabaseController.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("Id");
 
-                    b.Property<int>("GrandTotal")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("GrandTotal");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("TEXT")
                         .HasColumnName("OrderDate");
@@ -146,10 +145,15 @@ namespace DatabaseController.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("OrderStatus");
 
+                    b.Property<int>("PaymentTypeId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PaymentTypeId");
 
                     b.HasIndex("UserId");
 
@@ -164,19 +168,31 @@ namespace DatabaseController.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("Price");
-
                     b.Property<int>("ProductQuantity")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("ProductQuantity");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("OrderId", "ProductId");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("OrderProductInfo");
+                });
+
+            modelBuilder.Entity("DatabaseController.Models.PaymentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("Id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentTypes", (string)null);
                 });
 
             modelBuilder.Entity("DatabaseController.Models.Product", b =>
@@ -412,11 +428,19 @@ namespace DatabaseController.Migrations
 
             modelBuilder.Entity("DatabaseController.Models.Order", b =>
                 {
+                    b.HasOne("DatabaseController.Models.PaymentType", "PaymentType")
+                        .WithMany("Orders")
+                        .HasForeignKey("PaymentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DatabaseController.Models.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("PaymentType");
 
                     b.Navigation("User");
                 });
@@ -544,6 +568,11 @@ namespace DatabaseController.Migrations
             modelBuilder.Entity("DatabaseController.Models.Order", b =>
                 {
                     b.Navigation("OrderProductInfos");
+                });
+
+            modelBuilder.Entity("DatabaseController.Models.PaymentType", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("DatabaseController.Models.Product", b =>

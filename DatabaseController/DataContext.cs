@@ -15,7 +15,6 @@ namespace DatabaseController
         public DbSet<UserInfo> UserInfos { get; set; }
         public DbSet<Gender> Genders { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<ReleaseForm> ReleaseForms { get; set; }
@@ -63,6 +62,16 @@ namespace DatabaseController
                     .WithOne(e => e.User)
                     .HasForeignKey(e => e.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasMany(e => e.Products)
+                    .WithMany(e => e.Users)
+                    .UsingEntity<ShoppingCart>(
+                        e => e.HasOne(e => e.Product)
+                            .WithMany(e => e.ShoppingCarts)
+                            .HasForeignKey(e => e.ProductId),
+                        e => e.HasOne(e => e.User)
+                            .WithMany(e => e.ShoppingCarts)
+                            .HasForeignKey(e => e.UserId));
             });
 
             modelBuilder.Entity<UserInfo>(entity =>
@@ -260,13 +269,13 @@ namespace DatabaseController
                     .HasColumnName(nameof(Order.OrderStatus))
                     .IsRequired();
 
+                entity.Property(e => e.GrandTotal)
+                    .HasColumnName(nameof(Order.GrandTotal))
+                    .IsRequired();
+
                 entity.HasOne(e => e.User)
                     .WithMany(e => e.Orders)
                     .HasForeignKey(e => e.UserId);
-
-                entity.HasOne(e => e.PaymentType)
-                    .WithMany(e => e.Orders)
-                    .HasForeignKey(e => e.PaymentTypeId);
 
                 entity.HasMany(e => e.Products)
                     .WithMany(e => e.Orders)
@@ -279,23 +288,13 @@ namespace DatabaseController
                             .HasForeignKey(e => e.OrderId),
                         e =>
                         {
-                            e.Property(e => e.ProductQuantity);
+                            e.Property(e => e.ProductQuantity)
+                                .HasColumnName(nameof(OrderProductInfo.ProductQuantity));
+                            e.Property(e => e.Price)
+                                .HasColumnName(nameof(OrderProductInfo.Price));
                             e.HasKey(e => new { e.OrderId, e.ProductId });
                         }
                         );
-            });
-
-            modelBuilder.Entity<PaymentType>(entity =>
-            {
-                entity.ToTable("PaymentTypes");
-
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id)
-                    .HasColumnName(nameof(PaymentType.Id));
-
-                entity.Property(e => e.Name)
-                    .HasColumnName(nameof(PaymentType.Name))
-                    .IsRequired();
             });
 
             modelBuilder.Entity<Review>(entity =>

@@ -48,30 +48,6 @@ namespace FillingDatabase
             }
         }
 
-        public void AddPaymentTypes()
-        {
-            try
-            {
-                using DataContext data = new();
-
-                List<PaymentType> genders = new List<PaymentType>
-                {
-                new PaymentType() { Name = "Cash" },
-                new PaymentType() { Name = "Card" }
-                };
-                genders.ForEach(n => data.PaymentTypes.Add(n));
-                
-                data.SaveChanges();
-                Console.WriteLine("PaymentTypes added");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-
-
         public void AddIndications(int count)
         {
             try
@@ -196,6 +172,26 @@ namespace FillingDatabase
 
                     data.UserInfos.Add(userInfo);
                 }
+
+                User userAdmin = new()
+                {
+                    Login = "admin",
+                    Password = "admin"
+                };
+
+                data.Users.Add(userAdmin);
+
+                UserInfo userInfoAdmin = new()
+                {
+                    Id = -1,
+                    FullName = "Админ Админов Админович",
+                    Gender = genders[random.Next(genders.Count)],
+                    BirthDate = DateTime.Now,
+                    Phone = "88888888888",
+                    User = userAdmin
+                };
+
+                data.UserInfos.Add(userInfoAdmin);
 
                 data.SaveChanges();
                 Console.WriteLine($"{count} Users added");

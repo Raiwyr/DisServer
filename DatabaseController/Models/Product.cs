@@ -26,6 +26,12 @@ namespace DatabaseController.Models
         public List<OrderProductInfo> OrderProductInfos { get; set; }
 
         [JsonIgnore]
+        public ICollection<User> Users { get; set; }
+
+        [JsonIgnore]
+        public List<ShoppingCart> ShoppingCarts { get; set; }
+
+        [JsonIgnore]
         public int ProductTypeId { get; set; }
         public ProductType ProductType { get; set; }
 

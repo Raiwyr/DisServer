@@ -3,6 +3,7 @@ using System;
 using DatabaseController;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseController.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230425231003_UpdateOrder")]
+    partial class UpdateOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
@@ -133,8 +136,9 @@ namespace DatabaseController.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("Id");
 
-                    b.Property<int>("GrandTotal")
-                        .HasColumnType("INTEGER")
+                    b.Property<string>("GrandTotal")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
                         .HasColumnName("GrandTotal");
 
                     b.Property<DateTime>("OrderDate")
@@ -164,13 +168,8 @@ namespace DatabaseController.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("Price");
-
                     b.Property<int>("ProductQuantity")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("ProductQuantity");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("OrderId", "ProductId");
 

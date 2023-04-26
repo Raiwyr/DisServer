@@ -11,14 +11,12 @@ namespace DatabaseController.Models
 
         public string OrderStatus { get; set; }
 
+        public int GrandTotal { get; set; }
+
         [JsonIgnore]
         public int UserId { get; set; }
         [JsonIgnore]
         public User User { get; set; }
-
-        [JsonIgnore]
-        public int PaymentTypeId { get; set; }
-        public PaymentType PaymentType { get; set; }
         
         public ICollection<Product> Products { get; set; }
 
