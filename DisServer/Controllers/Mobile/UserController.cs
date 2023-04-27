@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 
-namespace DisServer.Controllers
+namespace DisServer.Controllers.Mobile
 {
-    [Route("api/user")]
+    [Route("api/mobile/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -44,12 +44,17 @@ namespace DisServer.Controllers
             {
                 var userInfo = await connector.GetUserInfoByIdAsync(id);
                 string response = JsonConvert.SerializeObject(
-                    new UserInfoModel() {
+                    new UserInfoModel()
+                    {
                         Id = userInfo.Id,
                         FullName = userInfo.FullName,
                         BirthDate = userInfo.BirthDate,
                         Phone = userInfo.Phone,
-                        Gender = userInfo.Gender.Name
+                        Gender = new()
+                        {
+                            Id = userInfo.Gender.Id,
+                            Name = userInfo.Gender.Name
+                        }
                     });
                 return response;
             }
@@ -199,10 +204,76 @@ namespace DisServer.Controllers
                 if (reviewModel == null)
                     throw new Exception();
 
-                connector.PostReview(reviewModel);
-
+                await connector.PostReview(reviewModel);
 
                 return true;
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+            }
+        }
+
+        [HttpGet("genders")]
+        public async Task<object> GetGenders()
+        {
+            try
+            {
+                var genders = await connector.GetGendersAsync();
+
+                var genderModels = genders.Select(g => new GenderModel()
+                {
+                    Id = g.Id,
+                    Name = g.Name
+                });
+
+                return JsonConvert.SerializeObject(genderModels);
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+            }
+        }
+
+        [HttpPut("info")]
+        public async Task<object> PutUserInfo(
+            [FromBody] string model
+            )
+        {
+            try
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfoModel>(model);
+
+                if (userInfo != null)
+                {
+                    await connector.UpdateUserInfoAsync(userInfo);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+            }
+        }
+
+        [HttpPost]
+        public async Task<object> PostUser(
+            [FromBody] string model
+            )
+        {
+            try
+            {
+                var registrationModel = JsonConvert.DeserializeObject<RegistrationModel>(model);
+
+                if (registrationModel != null)
+                {
+                    await connector.AddUserAsync(registrationModel);
+                    return true;
+                }
+                else
+                    return false;
             }
             catch (Exception ex)
             {

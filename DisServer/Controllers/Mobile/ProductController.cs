@@ -7,9 +7,9 @@ using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace DisServer.Controllers
+namespace DisServer.Controllers.Mobile
 {
-    [Route("api/product")]
+    [Route("api/mobile/product")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -30,7 +30,7 @@ namespace DisServer.Controllers
                 string response = JsonConvert.SerializeObject(product);
                 return response;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ForbidResult();
             }

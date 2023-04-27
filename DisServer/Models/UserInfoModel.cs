@@ -18,6 +18,15 @@ namespace DisServer.Models
         public string Phone { get; set; }
 
         [JsonProperty("Gender")]
-        public string Gender { get; set; }
+        public GenderModel Gender { get; set; }
+    }
+
+    public class GenderModel
+    {
+        [JsonProperty("Id")]
+        public int Id { get; set; }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
     }
 }

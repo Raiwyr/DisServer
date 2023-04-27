@@ -3,7 +3,7 @@ using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace DisServer.Controllers
+namespace DisServer.Controllers.Mobile
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -44,7 +44,7 @@ namespace DisServer.Controllers
                 TestModel? model = list.Where(x => x.Id == id).FirstOrDefault();
                 return JsonSerializer.Serialize(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return JsonSerializer.Serialize(new ForbidResult());
             }
@@ -73,7 +73,7 @@ namespace DisServer.Controllers
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        
+
         public string Surname { get; set; }
     }
 }

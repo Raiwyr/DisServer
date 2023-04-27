@@ -4,6 +4,7 @@ using DisServer.Enums;
 using DisServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.UserSecrets;
+using System.Linq;
 
 namespace DisServer.Connectors
 {
@@ -47,7 +48,7 @@ namespace DisServer.Connectors
                 var user = await context.Users.Include(u => u.Products).Where(u => u.Id == userId).FirstOrDefaultAsync();
                 var product = await context.Products.Where(p => p.Id == productId).FirstOrDefaultAsync();
                 user.Products.Add(product);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -122,7 +123,7 @@ namespace DisServer.Connectors
                 foreach (var product in products)
                     user.Products.Remove(product);
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
 
                 transaction.Commit();
             }
@@ -176,7 +177,91 @@ namespace DisServer.Connectors
                     UserName = review.UserName
                 });
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<List<Gender>> GetGendersAsync()
+        {
+            try
+            {
+                using DataContext context = new();
+
+                var genders = await context.Genders.ToListAsync();
+
+                return genders;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task UpdateUserInfoAsync(UserInfoModel userInfoModel)
+        {
+            try
+            {
+                using DataContext context = new();
+
+                var gender = await context.Genders.Where(g => g.Id == userInfoModel.Gender.Id).FirstOrDefaultAsync();
+                var userInfo = await context.UserInfos.Include(u => u.Gender).Where(u => u.Id == userInfoModel.Id).FirstOrDefaultAsync();
+
+                if (userInfo != null && gender != null)
+                {
+                    userInfo.FullName = userInfoModel.FullName;
+                    userInfo.BirthDate = userInfoModel.BirthDate;
+                    userInfo.Phone = userInfoModel.Phone;
+                    userInfo.Gender = gender;
+
+                }
+
+                await context.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task AddUserAsync(RegistrationModel registrationModel)
+        {
+            try
+            {
+                using DataContext context = new();
+
+                var gender = await context.Genders.Where(g => g.Id == registrationModel.GenderId).FirstOrDefaultAsync();
+
+                if (gender == null)
+                    throw new Exception();
+
+                var userInfo = new UserInfo()
+                {
+                    FullName = registrationModel.FullName,
+                    BirthDate = registrationModel.BirthDate,
+                    Phone = registrationModel.Phone,
+                    Gender = gender
+                };
+
+                var user = new User()
+                {
+                    Login = registrationModel.Username,
+                    Password = registrationModel.Password,
+                    UserInfo = userInfo
+                };
+
+                context.Users.Add(user);
+
+                await context.SaveChangesAsync();
 
             }
             catch (Exception ex)
