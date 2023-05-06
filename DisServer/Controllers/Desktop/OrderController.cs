@@ -1,4 +1,5 @@
-﻿using DisServer.Connectors.Desktop;
+﻿using DatabaseController.Models;
+using DisServer.Connectors.Desktop;
 using DisServer.Enums;
 using DisServer.Models.Desktop;
 using Microsoft.AspNetCore.Mvc;
@@ -34,14 +35,40 @@ namespace DisServer.Controllers.Desktop
                     OrderDate = o.OrderDate,
                     OrderStatus = o.OrderStatus,
                     GrandTotal = o.GrandTotal,
-                    ProductModels = o.OrderProductInfos.Select(p => new OrderProductModel()
+                    Products = null
+                });
+
+                var response = JsonConvert.SerializeObject(orderModel);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<object> GetOrder(int id)
+        {
+            try
+            {
+                var order = await connector.GetOrderAsync(id);
+
+                var orderModel = new OrderModel()
+                {
+                    Id = order.Id,
+                    OrderDate = order.OrderDate,
+                    OrderStatus = order.OrderStatus,
+                    GrandTotal = order.GrandTotal,
+                    Products = order.OrderProductInfos.Select(p => new OrderProductModel()
                     {
-                        Id =p.ProductId,
+                        Id = p.ProductId,
                         Name = p.Product.Name,
                         Price = p.Price,
                         Count = p.ProductQuantity
                     }).ToList()
-                });
+                };
 
                 var response = JsonConvert.SerializeObject(orderModel);
 

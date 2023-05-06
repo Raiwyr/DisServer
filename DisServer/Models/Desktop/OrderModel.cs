@@ -16,8 +16,8 @@ namespace DisServer.Models.Desktop
         [JsonProperty("GrandTotal")]
         public int GrandTotal { get; set; }
 
-        [JsonProperty("ProductModels")]
-        public List<OrderProductModel> ProductModels { get; set; }
+        [JsonProperty("Products")]
+        public List<OrderProductModel> Products { get; set; }
     }
 
     public class OrderProductModel
