@@ -1,6 +1,6 @@
 ﻿using DatabaseController.Models;
-using DisServer.Connectors;
-using DisServer.Models;
+using DisServer.Connectors.Mobile;
+using DisServer.Models.Mobile;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Security.Cryptography;

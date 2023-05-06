@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace DisServer.Models
+namespace DisServer.Models.Mobile
 {
     public class OrderModel
     {
@@ -29,7 +29,7 @@ namespace DisServer.Models
         public int Price { get; set; }
 
         [JsonProperty("Count")]
-        public int Count { get; set; } 
+        public int Count { get; set; }
 
     }
 }

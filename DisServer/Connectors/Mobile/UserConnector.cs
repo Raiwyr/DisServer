@@ -1,12 +1,12 @@
 ﻿using DatabaseController;
 using DatabaseController.Models;
 using DisServer.Enums;
-using DisServer.Models;
+using DisServer.Models.Mobile;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Linq;
 
-namespace DisServer.Connectors
+namespace DisServer.Connectors.Mobile
 {
     public class UserConnector
     {
@@ -68,7 +68,7 @@ namespace DisServer.Connectors
                     .Include(u => u.Products)
                     .ThenInclude(p => p.Review)
                     .Where(u => u.Id == UserId).FirstOrDefaultAsync();
-                if(user?.Products != null)
+                if (user?.Products != null)
                     return user.Products.ToList();
                 else
                     return new List<Product>();
@@ -80,13 +80,14 @@ namespace DisServer.Connectors
             }
         }
 
-        public async Task AddProductsToOrderAsync(List<ProductToOrderModel> productsToOrder, int userId) {
+        public async Task AddProductsToOrderAsync(List<ProductToOrderModel> productsToOrder, int userId)
+        {
 
             using DataContext context = new();
             using var transaction = context.Database.BeginTransaction();
             try
             {
-                
+
                 var listProductIds = productsToOrder.Select(p => p.Id).ToList();
                 var products = await context.Products.Include(p => p.Availability).Where(p => listProductIds.Contains(p.Id)).ToListAsync();
                 var user = await context.Users
@@ -134,8 +135,10 @@ namespace DisServer.Connectors
             }
         }
 
-        public async Task<List<Order>> GetOrdersAsync(int userId, bool getCompletedOrders) {
-            try {
+        public async Task<List<Order>> GetOrdersAsync(int userId, bool getCompletedOrders)
+        {
+            try
+            {
                 using DataContext context = new();
                 var user = await context.Users
                     .Include(u => u.Orders)
@@ -146,20 +149,22 @@ namespace DisServer.Connectors
 
                 List<Order> orders = new();
 
-                if(getCompletedOrders)
+                if (getCompletedOrders)
                     orders = user?.Orders.Where(o => o.OrderStatus == OrderStatus.Completed).ToList() ?? new();
                 else
                     orders = user?.Orders.Where(o => o.OrderStatus != OrderStatus.Completed).ToList() ?? new();
 
                 return orders;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
                 throw;
             }
         }
 
-        public async Task PostReview(ReviewModel review) {
+        public async Task PostReview(ReviewModel review)
+        {
             try
             {
                 using DataContext context = new();
@@ -169,7 +174,8 @@ namespace DisServer.Connectors
                 if (user == null || product == null)
                     throw new Exception();
 
-                product.Review.Add(new() {
+                product.Review.Add(new()
+                {
                     UserId = review.UserId,
                     Assessment = review.Assessment,
                     Message = review.Message,

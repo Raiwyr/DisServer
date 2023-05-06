@@ -1,6 +1,6 @@
 ﻿using DatabaseController;
 using DatabaseController.Models;
-using DisServer.Models;
+using DisServer.Models.Mobile;
 using DisServer.Services.VectorOptimization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace DisServer.Connectors
+namespace DisServer.Connectors.Mobile
 {
     public class ProductConnector
     {
@@ -88,10 +88,10 @@ namespace DisServer.Connectors
                     .Where(p => p.ProductType.Id == id)
                     .Where(p => model.MinPrice != null ? p.Availability.Price >= model.MinPrice : true)
                     .Where(p => model.MaxPrice != null ? p.Availability.Price <= model.MaxPrice : true)
-                    .Where(p => (model.IndicationsIds != null && model.IndicationsIds.Count() > 0) ? p.Indication.Any(l => model.IndicationsIds.Contains(l.Id)) : true)
-                    .Where(p => (model.ManufacturersIds != null && model.ManufacturersIds.Count() > 0) ? model.ManufacturersIds.Contains(p.ManufacturerId) : true)
-                    .Where(p => (model.QuantityPackage != null && model.QuantityPackage.Count() > 0) ? model.QuantityPackage.Contains(p.QuantityPackage) : true)
-                    .Where(p => (model.ReleaseFormsIds != null && model.ReleaseFormsIds.Count() > 0) ? model.ReleaseFormsIds.Contains(p.ReleaseFormId) : true)
+                    .Where(p => model.IndicationsIds != null && model.IndicationsIds.Count() > 0 ? p.Indication.Any(l => model.IndicationsIds.Contains(l.Id)) : true)
+                    .Where(p => model.ManufacturersIds != null && model.ManufacturersIds.Count() > 0 ? model.ManufacturersIds.Contains(p.ManufacturerId) : true)
+                    .Where(p => model.QuantityPackage != null && model.QuantityPackage.Count() > 0 ? model.QuantityPackage.Contains(p.QuantityPackage) : true)
+                    .Where(p => model.ReleaseFormsIds != null && model.ReleaseFormsIds.Count() > 0 ? model.ReleaseFormsIds.Contains(p.ReleaseFormId) : true)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -170,10 +170,10 @@ namespace DisServer.Connectors
                         .LikeAny(paramsForLikeSearch)
                         .Where(p => model.MinPrice != null ? p.Availability.Price >= model.MinPrice : true)
                         .Where(p => model.MaxPrice != null ? p.Availability.Price <= model.MaxPrice : true)
-                        .Where(p => (model.IndicationsIds != null && model.IndicationsIds.Count() > 0) ? p.Indication.Any(l => model.IndicationsIds.Contains(l.Id)) : true)
-                        .Where(p => (model.ManufacturersIds != null && model.ManufacturersIds.Count() > 0) ? model.ManufacturersIds.Contains(p.ManufacturerId) : true)
-                        .Where(p => (model.QuantityPackage != null && model.QuantityPackage.Count() > 0) ? model.QuantityPackage.Contains(p.QuantityPackage) : true)
-                        .Where(p => (model.ReleaseFormsIds != null && model.ReleaseFormsIds.Count() > 0) ? model.ReleaseFormsIds.Contains(p.ReleaseFormId) : true)
+                        .Where(p => model.IndicationsIds != null && model.IndicationsIds.Count() > 0 ? p.Indication.Any(l => model.IndicationsIds.Contains(l.Id)) : true)
+                        .Where(p => model.ManufacturersIds != null && model.ManufacturersIds.Count() > 0 ? model.ManufacturersIds.Contains(p.ManufacturerId) : true)
+                        .Where(p => model.QuantityPackage != null && model.QuantityPackage.Count() > 0 ? model.QuantityPackage.Contains(p.QuantityPackage) : true)
+                        .Where(p => model.ReleaseFormsIds != null && model.ReleaseFormsIds.Count() > 0 ? model.ReleaseFormsIds.Contains(p.ReleaseFormId) : true)
                         .ToListAsync();
                     results = results.OrderByDescending(p => listParams.Where(l => p.Name.ToLower().Contains(l.ToLower())).ToList().Count()).ToList();
 
@@ -188,10 +188,10 @@ namespace DisServer.Connectors
                         .Where(p => EF.Functions.Like(p.Name, $"%{searchParam}%"))
                         .Where(p => model.MinPrice != null ? p.Availability.Price >= model.MinPrice : true)
                         .Where(p => model.MaxPrice != null ? p.Availability.Price <= model.MaxPrice : true)
-                        .Where(p => (model.IndicationsIds != null && model.IndicationsIds.Count() > 0) ? p.Indication.Any(l => model.IndicationsIds.Contains(l.Id)) : true)
-                        .Where(p => (model.ManufacturersIds != null && model.ManufacturersIds.Count() > 0) ? model.ManufacturersIds.Contains(p.ManufacturerId) : true)
-                        .Where(p => (model.QuantityPackage != null && model.QuantityPackage.Count() > 0) ? model.QuantityPackage.Contains(p.QuantityPackage) : true)
-                        .Where(p => (model.ReleaseFormsIds != null && model.ReleaseFormsIds.Count() > 0) ? model.ReleaseFormsIds.Contains(p.ReleaseFormId) : true)
+                        .Where(p => model.IndicationsIds != null && model.IndicationsIds.Count() > 0 ? p.Indication.Any(l => model.IndicationsIds.Contains(l.Id)) : true)
+                        .Where(p => model.ManufacturersIds != null && model.ManufacturersIds.Count() > 0 ? model.ManufacturersIds.Contains(p.ManufacturerId) : true)
+                        .Where(p => model.QuantityPackage != null && model.QuantityPackage.Count() > 0 ? model.QuantityPackage.Contains(p.QuantityPackage) : true)
+                        .Where(p => model.ReleaseFormsIds != null && model.ReleaseFormsIds.Count() > 0 ? model.ReleaseFormsIds.Contains(p.ReleaseFormId) : true)
                         .ToListAsync();
                     return results;
                 }
@@ -251,10 +251,10 @@ namespace DisServer.Connectors
                             assessment);
                     }
 
-                    if(model.ReviewsSort != null && model.evaluationReviews != null)
+                    if (model.ReviewsSort != null && model.evaluationReviews != null)
                         reviewsVector.Values.Add(
                             item.Id,
-                            (item.Review?.Any() ?? false) ? item.Review.Count() : 0);
+                            item.Review?.Any() ?? false ? item.Review.Count() : 0);
                 }
 
                 List<Vector> vectors = new();
@@ -332,7 +332,7 @@ namespace DisServer.Connectors
         }
     }
 
-    
+
 
     public static class Extensions
     {
@@ -348,7 +348,7 @@ namespace DisServer.Connectors
                                                             Expression.Constant(EF.Functions),
                                                             Expression.Property(parameter, typeof(Product).GetProperty(nameof(Product.Name))),
                                                             Expression.Constant(word)))
-                            .Aggregate<MethodCallExpression, Expression>(null, (current, call) => current != null ? Expression.OrElse(current, call) : (Expression)call);
+                            .Aggregate<MethodCallExpression, Expression>(null, (current, call) => current != null ? Expression.OrElse(current, call) : call);
 
             return products.Where(Expression.Lambda<Func<Product, bool>>(body, parameter));
         }
@@ -365,7 +365,7 @@ namespace DisServer.Connectors
                                                             Expression.Constant(EF.Functions),
                                                             Expression.Property(parameter, typeof(Product).GetProperty(nameof(Product.Name))),
                                                             Expression.Constant(word)))
-                            .Aggregate<MethodCallExpression, Expression>(null, (current, call) => current != null ? Expression.AndAlso(current, call) : (Expression)call);
+                            .Aggregate<MethodCallExpression, Expression>(null, (current, call) => current != null ? Expression.AndAlso(current, call) : call);
 
             return products.Where(Expression.Lambda<Func<Product, bool>>(body, parameter));
         }

@@ -2,7 +2,7 @@
 using DatabaseController;
 using Microsoft.EntityFrameworkCore;
 
-namespace DisServer.Connectors
+namespace DisServer.Connectors.Mobile
 {
     public class ProductParameterConnector
     {

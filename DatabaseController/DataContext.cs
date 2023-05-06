@@ -23,6 +23,7 @@ namespace DatabaseController
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Availability> Availabilitys { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Worker> Workers { get; set; }
         #endregion
 
         public DataContext()
@@ -124,6 +125,9 @@ namespace DatabaseController
                 entity.Property(e => e.Name)
                     .HasColumnName(nameof(Product.Name))
                     .IsRequired();
+
+                entity.Property(e => e.ImageName)
+                    .HasColumnName(nameof(Product.ImageName));
 
                 entity.Property(e => e.Composition)
                     .HasColumnName(nameof(Product.Composition))
@@ -323,6 +327,27 @@ namespace DatabaseController
 
                 entity.Property(e => e.DateReview)
                     .HasColumnName(nameof(Review.DateReview))
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<Worker>(entity =>
+            {
+                entity.ToTable("Workers");
+
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .HasColumnName(nameof(User.Id));
+
+                entity.Property(e => e.Login)
+                    .HasColumnName(nameof(User.Login))
+                    .IsRequired();
+
+                entity.Property(e => e.Password)
+                    .HasColumnName(nameof(User.Password))
+                    .IsRequired();
+
+                entity.Property(e => e.FullName)
+                    .HasColumnName(nameof(Worker.FullName))
                     .IsRequired();
             });
         }

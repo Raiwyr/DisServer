@@ -19,6 +19,7 @@ namespace FillingDatabase
             }
             controller.AddGenders();
             controller.AddUsers(10);
+            controller.AddWorkers();
             controller.AddProducts(100, true);
             Console.ReadKey();
         }
@@ -26,6 +27,37 @@ namespace FillingDatabase
 
     public class Controller
     {
+        public void AddWorkers()
+        {
+            try
+            {
+                using DataContext data = new();
+
+                data.Workers.Add(
+                    new()
+                    {
+                        Login = "user",
+                        Password = "user",
+                        FullName = "Юзер юзерович",
+                    });
+
+                data.Workers.Add(
+                    new()
+                    {
+                        Login = "admin",
+                        Password = "admin",
+                        FullName = "Админ админович",
+                    });
+
+                data.SaveChanges();
+                Console.WriteLine("Workers added");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         public void AddGenders()
         {
             try
@@ -127,7 +159,7 @@ namespace FillingDatabase
                 using DataContext data = new();
 
                 for (int i = 1; i <= count; i++)
-                    data.ReleaseForms.Add(new ReleaseForm() { Name = "Тип_продукта" + i });
+                    data.ReleaseForms.Add(new ReleaseForm() { Name = "Форма_выпуска" + i });
 
                 data.SaveChanges();
                 Console.WriteLine($"{count} ReleaseForms added");
@@ -261,6 +293,7 @@ namespace FillingDatabase
                     data.Products.Add(new Product()
                     {
                         Name = $"Товар {i}",
+                        ImageName = "Product_102.jpg",
                         Composition = "Состав",
                         Dosage = "Доза",
                         QuantityPackage = verQuantityPackage <= 0.3 ? 5 : (verQuantityPackage <= 0.6 ? 10 : 15),

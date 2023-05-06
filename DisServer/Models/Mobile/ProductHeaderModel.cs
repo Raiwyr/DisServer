@@ -1,7 +1,7 @@
 ﻿using DatabaseController.Models;
 using Newtonsoft.Json;
 
-namespace DisServer.Models
+namespace DisServer.Models.Mobile
 {
     public class ProductHeaderModel
     {

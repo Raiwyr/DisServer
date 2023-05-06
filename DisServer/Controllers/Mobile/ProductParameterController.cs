@@ -1,5 +1,5 @@
 ﻿using DatabaseController.Models;
-using DisServer.Connectors;
+using DisServer.Connectors.Mobile;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
