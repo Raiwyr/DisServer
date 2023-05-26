@@ -180,6 +180,93 @@ namespace DisServer.Connectors.Desktop
         }
         #endregion
 
+        #region sideEffect
+        public async Task<List<SideEffect>> GetSideEffectsAsync()
+        {
+            try
+            {
+                using DataContext context = new();
+
+                var models = await context.SideEffects.ToListAsync();
+
+                return models;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> AddSideEffectsAsync(string title)
+        {
+            try
+            {
+                using DataContext context = new();
+
+                var model = new SideEffect()
+                {
+                    Name = title
+                };
+
+                context.SideEffects.Add(model);
+
+                await context.SaveChangesAsync();
+
+                return model.Id;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> UpdateSideEffectsAsync(int id, string title)
+        {
+            try
+            {
+                using DataContext context = new();
+
+                var model = await context.SideEffects.Where(i => i.Id == id).FirstOrDefaultAsync();
+
+                if (model == null)
+                    return false;
+
+                model.Name = title;
+
+                await context.SaveChangesAsync();
+
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteSideEffectsAsync(int id)
+        {
+            try
+            {
+                using DataContext context = new();
+
+                var model = await context.SideEffects.Where(i => i.Id == id).FirstOrDefaultAsync();
+
+                if (model == null)
+                    return false;
+
+                context.SideEffects.Remove(model);
+
+                await context.SaveChangesAsync();
+
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        #endregion
+
         #region producttype
         public async Task<List<ProductType>> GetProductTypesAsync()
         {

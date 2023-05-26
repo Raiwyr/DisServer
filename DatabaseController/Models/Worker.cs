@@ -15,5 +15,7 @@ namespace DatabaseController.Models
         public string Password { get; set; }
 
         public string FullName { get; set; }
+
+        public bool isAdmin { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using DatabaseController;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseController.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230508200325_UpdateWorker")]
+    partial class UpdateWorker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
@@ -321,23 +324,6 @@ namespace DatabaseController.Migrations
                     b.ToTable("ShoppingCart");
                 });
 
-            modelBuilder.Entity("DatabaseController.Models.SideEffect", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("Id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SideEffects", (string)null);
-                });
-
             modelBuilder.Entity("DatabaseController.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -412,9 +398,9 @@ namespace DatabaseController.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("Password");
 
-                    b.Property<bool>("isAdmin")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("isAdmin");
+                    b.Property<string>("isAdmin")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -434,21 +420,6 @@ namespace DatabaseController.Migrations
                     b.HasIndex("ProductsId");
 
                     b.ToTable("IndicationProduct");
-                });
-
-            modelBuilder.Entity("ProductSideEffect", b =>
-                {
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SideEffectId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ProductsId", "SideEffectId");
-
-                    b.HasIndex("SideEffectId");
-
-                    b.ToTable("ProductSideEffect");
                 });
 
             modelBuilder.Entity("ContraindicationProduct", b =>
@@ -594,21 +565,6 @@ namespace DatabaseController.Migrations
                     b.HasOne("DatabaseController.Models.Product", null)
                         .WithMany()
                         .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ProductSideEffect", b =>
-                {
-                    b.HasOne("DatabaseController.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DatabaseController.Models.SideEffect", null)
-                        .WithMany()
-                        .HasForeignKey("SideEffectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

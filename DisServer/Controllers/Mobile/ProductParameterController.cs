@@ -48,6 +48,21 @@ namespace DisServer.Controllers.Mobile
             }
         }
 
+        [HttpGet("sideeffect")]
+        public async Task<object> GetSideEffectAsync()
+        {
+            try
+            {
+                List<SideEffect> sideEffect = await connector.GetSideEffectsAsync();
+                string response = JsonConvert.SerializeObject(sideEffect);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+            }
+        }
+
         [HttpGet("category")]
         public async Task<object> GetCategoryAsync()
         {

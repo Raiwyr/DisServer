@@ -20,6 +20,7 @@ namespace DatabaseController
         public DbSet<ReleaseForm> ReleaseForms { get; set; }
         public DbSet<Indication> Indications { get; set; }
         public DbSet<Contraindication> Contraindications { get; set; }
+        public DbSet<SideEffect> SideEffects { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Availability> Availabilitys { get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -159,6 +160,9 @@ namespace DatabaseController
                 entity.HasMany(e => e.Contraindication)
                     .WithMany(e => e.Products);
 
+                entity.HasMany(e => e.SideEffect)
+                    .WithMany(e => e.Products);
+
                 entity.HasOne(e => e.Manufacturer)
                     .WithMany(e => e.Products)
                     .HasForeignKey(e => e.ManufacturerId);
@@ -223,6 +227,19 @@ namespace DatabaseController
 
                 entity.Property(e => e.Name)
                     .HasColumnName(nameof(Contraindication.Name))
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<SideEffect>(entity =>
+            {
+                entity.ToTable("SideEffects");
+
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .HasColumnName(nameof(SideEffect.Id));
+
+                entity.Property(e => e.Name)
+                    .HasColumnName(nameof(SideEffect.Name))
                     .IsRequired();
             });
 
@@ -348,6 +365,10 @@ namespace DatabaseController
 
                 entity.Property(e => e.FullName)
                     .HasColumnName(nameof(Worker.FullName))
+                    .IsRequired();
+
+                entity.Property(e => e.isAdmin)
+                    .HasColumnName(nameof(Worker.isAdmin))
                     .IsRequired();
             });
         }

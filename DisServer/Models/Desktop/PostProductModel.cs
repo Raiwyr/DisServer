@@ -34,6 +34,9 @@ namespace DisServer.Models.Desktop
         [JsonProperty("ContraindicationIds")]
         public List<int> ContraindicationIds { get; set; }
 
+        [JsonProperty("SideEffectIds")]
+        public List<int> SideEffectIds { get; set; }
+
         [JsonProperty("ManufacturerId")]
         public int ManufacturerId { get; set; }
 

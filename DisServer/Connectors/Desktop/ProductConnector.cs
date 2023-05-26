@@ -19,6 +19,7 @@ namespace DisServer.Connectors.Desktop
                 var product = await context.Products
                     .Include(p => p.Indication)
                     .Include(p => p.Contraindication)
+                    .Include(p => p.SideEffect)
                     .Include(p => p.Availability)
                     .Include(p => p.ProductType)
                     .Include(p => p.ReleaseForm)
@@ -67,6 +68,7 @@ namespace DisServer.Connectors.Desktop
 
                 var indications = await context.Indications.Where(i => model.IndicationIds.Contains(i.Id)).ToListAsync();
                 var contraindications = await context.Contraindications.Where(c => model.ContraindicationIds.Contains(c.Id)).ToListAsync();
+                var sideEffect = await context.SideEffects.Where(c => model.SideEffectIds.Contains(c.Id)).ToListAsync();
                 var productType = await context.ProductTypes.Where(p => p.Id == model.ProductTypeId).FirstOrDefaultAsync();
                 var releaseForm = await context.ReleaseForms.Where(r => r.Id == model.ReleaseFormId).FirstOrDefaultAsync();
                 var manufacturer = await context.Manufacturers.Where(r => r.Id == model.ManufacturerId).FirstOrDefaultAsync();
@@ -74,6 +76,7 @@ namespace DisServer.Connectors.Desktop
                 if (
                     indications.Count > 0 &&
                     contraindications.Count > 0 &&
+                    sideEffect.Count > 0 &&
                     productType != null &&
                     releaseForm != null &&
                     manufacturer != null
@@ -95,7 +98,8 @@ namespace DisServer.Connectors.Desktop
                         ReleaseForm = releaseForm,
                         Manufacturer = manufacturer,
                         Indication = indications,
-                        Contraindication = contraindications
+                        Contraindication = contraindications,
+                        SideEffect = sideEffect
                     };
 
                     context.Products.Add(product);
@@ -141,9 +145,11 @@ namespace DisServer.Connectors.Desktop
                     .Include(p => p.Manufacturer)
                     .Include(p => p.Indication)
                     .Include(p => p.Contraindication)
+                    .Include(p => p.SideEffect)
                     .Where(p => p.Id == productId).FirstOrDefaultAsync();
                 var indications = await context.Indications.Where(i => model.IndicationIds.Contains(i.Id)).ToListAsync();
                 var contraindications = await context.Contraindications.Where(c => model.ContraindicationIds.Contains(c.Id)).ToListAsync();
+                var sideEffect = await context.SideEffects.Where(c => model.SideEffectIds.Contains(c.Id)).ToListAsync();
                 var productType = await context.ProductTypes.Where(p => p.Id == model.ProductTypeId).FirstOrDefaultAsync();
                 var releaseForm = await context.ReleaseForms.Where(r => r.Id == model.ReleaseFormId).FirstOrDefaultAsync();
                 var manufacturer = await context.Manufacturers.Where(r => r.Id == model.ManufacturerId).FirstOrDefaultAsync();
@@ -174,6 +180,7 @@ namespace DisServer.Connectors.Desktop
                         product.Manufacturer = manufacturer;
                     product.Indication = indications;
                     product.Contraindication = contraindications;
+                    product.SideEffect = sideEffect;
 
                     await context.SaveChangesAsync();
 

@@ -138,6 +138,65 @@ namespace DisServer.Controllers.Desktop
         }
         #endregion
 
+        #region sideEffects
+        [HttpGet("sideeffect")]
+        public async Task<object> GetSideEffectsAsync()
+        {
+            try
+            {
+                List<SideEffect> sideEffects = await connector.GetSideEffectsAsync();
+                string response = JsonConvert.SerializeObject(sideEffects);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+            }
+        }
+
+        [HttpPost("sideeffect")]
+        public async Task<object> PostSideEffectAsync(string title)
+        {
+            try
+            {
+                return await connector.AddSideEffectsAsync(title);
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+            }
+        }
+
+        [HttpPut("sideeffect")]
+        public async Task<object> PutSideEffectAsync(
+            int id,
+            string title
+            )
+        {
+            try
+            {
+                return await connector.UpdateSideEffectsAsync(id, title);
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+            }
+        }
+
+        [HttpDelete("sideeffect")]
+        public async Task<object> DeleteSideEffectAsync(int id)
+        {
+            try
+            {
+                return await connector.DeleteSideEffectsAsync(id);
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
+            }
+        }
+        #endregion
+
         #region releaseforms
         [HttpGet("releaseforms")]
         public async Task<object> GetReleaseFormsAsync()

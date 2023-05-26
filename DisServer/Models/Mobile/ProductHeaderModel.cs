@@ -19,5 +19,8 @@ namespace DisServer.Models.Mobile
 
         [JsonProperty("Count")]
         public int Count { get; set; }
+
+        [JsonProperty("ImageName")]
+        public string ImageName { get; set; }
     }
 }

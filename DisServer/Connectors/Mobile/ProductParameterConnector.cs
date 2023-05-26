@@ -34,6 +34,20 @@ namespace DisServer.Connectors.Mobile
             }
         }
 
+        public async Task<List<SideEffect>> GetSideEffectsAsync()
+        {
+            try
+            {
+                using DataContext context = new();
+                return await context.SideEffects.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
         public async Task<List<ProductType>> GetCategoriesAsync()
         {
             try

@@ -14,6 +14,9 @@ namespace DisServer.Connectors.Mobile
     public class ProductConnector
     {
         private readonly IVectorOptimization vectorOptimization;
+
+        private static readonly string FilesFolderPath = Environment.CurrentDirectory + "\\Files\\";
+
         public ProductConnector()
         {
             vectorOptimization = new VectorOptimizationService();
@@ -46,6 +49,7 @@ namespace DisServer.Connectors.Mobile
                     .Include(p => p.Manufacturer)
                     .Include(p => p.Indication)
                     .Include(p => p.Contraindication)
+                    .Include(p => p.SideEffect)
                     .Include(p => p.Review)
                     .FirstOrDefaultAsync();
                 return product;
@@ -213,6 +217,7 @@ namespace DisServer.Connectors.Mobile
                     .Include(p => p.Indication)
                     .Include(p => p.Contraindication)
                     .Include(p => p.Availability)
+                    .Include(p => p.SideEffect)
                     .Include(p => p.Review)
                     .Where(p => p.Indication.Where(i => i.Id == model.IndicationId).Count() > 0)
                     .ToListAsync();
@@ -221,6 +226,7 @@ namespace DisServer.Connectors.Mobile
                     product = product.Where(p => p.Availability.Quantity > 0).ToList();
 
                 Vector contraindicationVector = new() { Values = new() };
+                Vector sideEffectVector = new() { Values = new() };
                 Vector priseVector = new() { Values = new() };
                 Vector assessmentVector = new() { Values = new() };
                 Vector reviewsVector = new() { Values = new() };
@@ -231,6 +237,11 @@ namespace DisServer.Connectors.Mobile
                         contraindicationVector.Values.Add(
                             item.Id,
                             item.Contraindication.Select(i => i.Id).Intersect(model.ContraindicationIds).Count());
+
+                    if (model.SideEffectIds != null && model.evaluationSideEffect != null)
+                        sideEffectVector.Values.Add(
+                            item.Id,
+                            item.SideEffect.Select(i => i.Id).Intersect(model.SideEffectIds).Count());
 
                     if (model.PriseSort != null && model.evaluationPrise != null)
                         priseVector.Values.Add(item.Id, item.Availability.Price);
@@ -264,6 +275,12 @@ namespace DisServer.Connectors.Mobile
                     contraindicationVector.Weight = (int)model.evaluationContraindication;
                     contraindicationVector.NeedMaximize = false;
                     vectors.Add(contraindicationVector);
+                }
+                if (model.SideEffectIds != null && model.evaluationSideEffect != null)
+                {
+                    sideEffectVector.Weight = (int)model.evaluationSideEffect;
+                    sideEffectVector.NeedMaximize = false;
+                    vectors.Add(sideEffectVector);
                 }
                 if (model.PriseSort != null && model.evaluationPrise != null)
                 {
@@ -327,6 +344,22 @@ namespace DisServer.Connectors.Mobile
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<byte[]> GetImageBytes(string name)
+        {
+            try
+            {
+                string path = FilesFolderPath + name;
+
+                byte[] imageByte = await System.IO.File.ReadAllBytesAsync(path);
+
+                return imageByte;
+            }
+            catch
+            {
                 throw;
             }
         }

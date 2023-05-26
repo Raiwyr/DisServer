@@ -11,6 +11,9 @@ namespace DisServer.Models.Mobile
         [JsonProperty("ContraindicationIds")]
         public List<int>? ContraindicationIds { get; set; }
 
+        [JsonProperty("SideEffectIds")]
+        public List<int>? SideEffectIds { get; set; }
+
         [JsonProperty("PriseSort")]
         public bool? PriseSort { get; set; }
 
@@ -29,6 +32,9 @@ namespace DisServer.Models.Mobile
 
         [JsonProperty("evaluationContraindication")]
         public int? evaluationContraindication { get; set; }
+
+        [JsonProperty("evaluationSideEffect")]
+        public int? evaluationSideEffect { get; set; }
 
         [JsonProperty("evaluationPrise")]
         public int? evaluationPrise { get; set; }

@@ -45,6 +45,8 @@ namespace DatabaseController.Models
 
         public ICollection<Contraindication> Contraindication { get; set;}
 
+        public ICollection<SideEffect> SideEffect { get; set; }
+
         public ICollection<Review> Review { get; set; }
 
         [JsonIgnore]

@@ -34,7 +34,8 @@ namespace DisServer.Controllers.Mobile
                     Id = p.Id,
                     Name = p.Name,
                     Price = p.Availability.Price,
-                    Assessment = p.Review.Count() > 0 ? p.Review.Sum(p => p.Assessment) / p.Review.Count() : 0
+                    Assessment = p.Review.Count() > 0 ? p.Review.Sum(p => p.Assessment) / p.Review.Count() : 0,
+                    ImageName = p.ImageName ?? ""
                 }).ToList();
 
                 string response = JsonConvert.SerializeObject(headers);

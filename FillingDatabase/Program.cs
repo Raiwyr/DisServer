@@ -39,15 +39,16 @@ namespace FillingDatabase
                         Login = "user",
                         Password = "user",
                         FullName = "Юзер юзерович",
+                        isAdmin = false
                     });
 
-                data.Workers.Add(
-                    new()
-                    {
-                        Login = "admin",
-                        Password = "admin",
-                        FullName = "Админ админович",
-                    });
+                //data.Workers.Add(
+                //    new()
+                //    {
+                //        Login = "admin",
+                //        Password = "admin",
+                //        FullName = "Админ админович",
+                //    });
 
                 data.SaveChanges();
                 Console.WriteLine("Workers added");
@@ -109,6 +110,24 @@ namespace FillingDatabase
 
                 data.SaveChanges();
                 Console.WriteLine($"{count} Contraindications added");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public void AddSideEffects(int count)
+        {
+            try
+            {
+                using DataContext data = new();
+
+                for (int i = 1; i <= count; i++)
+                    data.SideEffects.Add(new SideEffect() { Name = "Побочка" + i });
+
+                data.SaveChanges();
+                Console.WriteLine($"{count} SideEffects added");
             }
             catch (Exception ex)
             {
@@ -243,6 +262,7 @@ namespace FillingDatabase
                 {
                     AddIndications(30);
                     AddContraindications(30);
+                    AddSideEffects(30);
                     AddManufacturers(10);
                     AddProductTypes(10);
                     AddReleaseForms(10);
@@ -252,6 +272,7 @@ namespace FillingDatabase
 
                 var indications = data.Indications.ToList();
                 var contraindications = data.Contraindications.ToList();
+                var sideEffects = data.SideEffects.ToList();
                 var manufacturers = data.Manufacturers.ToList();
                 var productTypes = data.ProductTypes.ToList();
                 var releaseForms = data.ReleaseForms.ToList();
@@ -302,6 +323,7 @@ namespace FillingDatabase
                         ReleaseForm = releaseForms[random.Next(releaseForms.Count)],
                         Indication = indications.OrderBy(x => random.Next()).Take(5).ToList(),
                         Contraindication = contraindications.OrderBy(x => random.Next()).Take(5).ToList(),
+                        SideEffect = sideEffects.OrderBy(x => random.Next()).Take(5).ToList(),
                         Manufacturer = manufacturers[random.Next(manufacturers.Count)],
                         Availability = new()
                         {

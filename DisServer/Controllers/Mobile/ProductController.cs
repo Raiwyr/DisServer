@@ -55,7 +55,8 @@ namespace DisServer.Controllers.Mobile
                     Name = p.Name,
                     Price = p.Availability.Price,
                     Assessment = p.Review.Count() > 0 ? p.Review.Sum(p => p.Assessment) / p.Review.Count() : 0,
-                    Count = p.Availability.Quantity
+                    Count = p.Availability.Quantity,
+                    ImageName = p.ImageName ?? ""
                 }).ToList();
 
                 string response = JsonConvert.SerializeObject(headers);
@@ -85,7 +86,8 @@ namespace DisServer.Controllers.Mobile
                     Id = p.Id,
                     Name = p.Name,
                     Price = p.Availability.Price,
-                    Assessment = p.Review.Count() > 0 ? p.Review.Sum(p => p.Assessment) / p.Review.Count() : 0
+                    Assessment = p.Review.Count() > 0 ? p.Review.Sum(p => p.Assessment) / p.Review.Count() : 0,
+                    ImageName = p.ImageName ?? ""
                 }).ToList();
 
                 string response = JsonConvert.SerializeObject(headers);
@@ -117,6 +119,23 @@ namespace DisServer.Controllers.Mobile
             {
                 return new ForbidResult();
 
+            }
+        }
+
+        [HttpGet("image/{name}")]
+        public async Task<object> GetImageAsync(string name)
+        {
+            try
+            {
+                byte[] imageByte = await connector.GetImageBytes(name);
+
+                string response = JsonConvert.SerializeObject(imageByte.ToList());
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new ForbidResult();
             }
         }
     }
