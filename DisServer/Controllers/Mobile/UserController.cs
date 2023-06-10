@@ -65,7 +65,7 @@ namespace DisServer.Controllers.Mobile
         }
 
         [HttpGet("shopcart")]
-        public async Task<object> PostProductToShopingCart(
+        public async Task<object> GetShopingCart(
             int userId
             )
         {
@@ -79,7 +79,8 @@ namespace DisServer.Controllers.Mobile
                     Name = p.Name,
                     Price = p.Availability.Price,
                     Assessment = p.Review.Count() > 0 ? p.Review.Sum(p => p.Assessment) / p.Review.Count() : 0,
-                    Count = p.Availability.Quantity
+                    Count = p.Availability.Quantity,
+                    ImageName = p.ImageName ?? ""
                 }).ToList();
 
                 string response = JsonConvert.SerializeObject(headers);

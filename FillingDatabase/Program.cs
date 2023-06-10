@@ -4,6 +4,7 @@ using DisServer.Services;
 using DisServer.Services.VectorOptimization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Xml.Linq;
 
 namespace FillingDatabase
@@ -17,16 +18,75 @@ namespace FillingDatabase
             {
                 context.Database.EnsureDeleted();
             }
-            controller.AddGenders();
-            controller.AddUsers(10);
-            controller.AddWorkers();
-            controller.AddProducts(100, true);
+            //controller.AddGenders();
+            //controller.AddUsers(10);
+            //controller.AddWorkers();
+            //controller.AddProducts(100, true);
+            controller.AddReviewsById(1);
             Console.ReadKey();
         }
     }
 
     public class Controller
     {
+        public void AddReviewsById(int id) {
+
+            List<Review> reviews = new();
+
+            reviews.Add(new Review()
+            {
+                Message = "Хороший товар",
+                Assessment = 4,
+                UserId = 1,
+                UserName = "Александр",
+                DateReview = DateTime.Now
+            });
+            reviews.Add(new Review()
+            {
+                Message = "Помогло",
+                Assessment = 5,
+                UserId = 1,
+                UserName = "Артемий",
+                DateReview = DateTime.Now
+            });
+            reviews.Add(new Review()
+            {
+                Message = "",
+                Assessment = 4,
+                UserId = 1,
+                UserName = "Михаил",
+                DateReview = DateTime.Now
+            });
+            reviews.Add(new Review()
+            {
+                Message = "Не помогло",
+                Assessment = 2,
+                UserId = 1,
+                UserName = "Anonim",
+                DateReview = DateTime.Now
+            });
+            reviews.Add(new Review()
+            {
+                Message = "Хорошо",
+                Assessment = 5,
+                UserId = 1,
+                UserName = "Степан Лавкрафтович",
+                DateReview = DateTime.Now
+            });
+
+            using DataContext data = new();
+
+            var product = data.Products.Where(p => p.Id == id).FirstOrDefault();
+
+            if (product != null) {
+                product.Review = reviews;
+            }
+
+            data.SaveChanges();
+
+            Console.WriteLine("Reviews added");
+        }
+
         public void AddWorkers()
         {
             try

@@ -126,7 +126,7 @@ namespace DisServer.Connectors.Desktop
                     throw new Exception();
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 throw;
             }
@@ -205,7 +205,7 @@ namespace DisServer.Connectors.Desktop
                     throw new Exception();
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 throw;
             }

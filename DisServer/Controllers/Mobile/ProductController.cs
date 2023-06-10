@@ -129,7 +129,7 @@ namespace DisServer.Controllers.Mobile
             {
                 byte[] imageByte = await connector.GetImageBytes(name);
 
-                string response = JsonConvert.SerializeObject(imageByte.ToList());
+                string response = JsonConvert.SerializeObject(Convert.ToBase64String(imageByte));
 
                 return response;
             }

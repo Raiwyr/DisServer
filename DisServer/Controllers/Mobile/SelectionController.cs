@@ -38,7 +38,13 @@ namespace DisServer.Controllers.Mobile
                     ImageName = p.ImageName ?? ""
                 }).ToList();
 
-                string response = JsonConvert.SerializeObject(headers);
+                string response = "";
+
+                if (selectionModel.CountResults == null)
+                    response = JsonConvert.SerializeObject(headers);
+                else
+                    response = JsonConvert.SerializeObject(headers.Take((int)selectionModel.CountResults));
+
                 return response;
             }
             catch (Exception ex)
